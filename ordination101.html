@@ -1,0 +1,2484 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Basic Ordination Methods</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Jari Oksanen" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="resources\gavins.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Basic Ordination Methods
+## Ordination for Ecological Methods
+### Jari Oksanen
+### Nov 12 to 21, 2018
+
+---
+
+
+
+class: bottom
+
+Source files of these slides are [in github](https://github.com/jarioksa/ordination101).
+
+&lt;a rel="license" href="http://creativecommons.org/licenses/by/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by/4.0/"&gt;Creative Commons Attribution 4.0 International License&lt;/a&gt;.
+
+© Jari Oksanen 2017&amp;mdash;2018
+
+This version was built on Tue Oct 20 15:42:36 2020
+
+&lt;!-- ********** INTRO ************ --&gt;
+---
+# This Is Ordination
+
+.center[
+&lt;img src="ordination101_files/figure-html/whatisthis-1.svg" style="display: block; margin: auto;" /&gt;
+]
+---
+class: inverse center middle
+
+# Ordination: Why and What?
+---
+# Multivariate Data
+
+- Ordination methods are multivariate graphical tools to display
+  multivariate data
+
+- *Multivariate data* have several variables and several sampling
+  units (SU), and such data are best analysed with
+  *multivariate methods*
+
+- We do not have one obvious dependent variable in multivariate data,
+  but we would still want to understand the major features of the data
+
+  - Species abundances in sampling sites, OTUs of DNA sequence
+    analysis in sampling units, measurements of chemical and physical
+    conditions in sampling stations *etc*
+
+- If we have a clear hypothesis with one dependent variable, it is
+  better to use univariate methods
+
+- Sometimes we can summarize multiple variables into one indicator
+  (*e.g*, diversity), and then we can use univariate methods
+
+- If all else fails, we *must* use multivariate methods
+
+---
+# Multivariate Data and Display
+
+.pull-left[
+.small[
+
+```
+   Callvulg Empenigr Rhodtome Vaccmyrt Vaccviti Pinusylv Descflex Betupube
+18     0.55    11.13     0.00     0.00    17.80     0.07     0.00     0.00
+15     0.67     0.17     0.00     0.35    12.13     0.12     0.00     0.00
+24     0.10     1.55     0.00     0.00    13.47     0.25     0.00     0.00
+27     0.00    15.13     2.42     5.92    15.97     0.00     3.70     0.00
+23     0.00    12.68     0.00     0.00    23.73     0.03     0.00     0.00
+19     0.00     8.92     0.00     2.42    10.28     0.12     0.02     0.00
+22     4.73     5.12     1.55     6.05    12.40     0.10     0.78     0.02
+16     4.47     7.33     0.00     2.15     4.33     0.10     0.00     0.00
+28     0.00     1.63     0.35    18.27     7.13     0.05     0.40     0.00
+13    24.13     1.90     0.07     0.22     5.30     0.12     0.00     0.00
+14     3.75     5.65     0.00     0.08     5.30     0.10     0.00     0.00
+20     0.02     6.45     0.00     0.00    14.13     0.07     0.00     0.00
+25     0.00     6.93     0.00     0.00    10.60     0.02     0.10     0.02
+7      0.00     5.30     0.00     0.00     8.20     0.00     0.05     0.00
+5      0.00     0.13     0.00     0.00     2.75     0.03     0.00     0.00
+6      0.30     5.75     0.00     0.00    10.50     0.10     0.00     0.00
+3      0.03     3.65     0.00     0.00     4.43     0.00     0.00     0.00
+4      3.40     0.63     0.00     0.00     1.98     0.05     0.05     0.00
+2      0.05     9.30     0.00     0.00     8.50     0.03     0.00     0.00
+9      0.00     3.47     0.00     0.25    20.50     0.25     0.00     0.00
+12     0.25    11.50     0.00     0.00    15.80     1.20     0.00     0.00
+10     0.25    11.00     0.00     0.00    11.90     0.25     0.00     0.00
+11     2.37     0.67     0.00     0.00    12.90     0.80     0.00     0.00
+21     0.00    16.00     4.00    15.00    25.00     0.25     0.50     0.25
+   Vacculig Diphcomp Dicrsp Dicrfusc Dicrpoly Hylosple Pleuschr Polypili
+18     1.60     2.07   0.00     1.62     0.00     0.00     4.67     0.02
+15     0.00     0.00   0.33    10.92     0.02     0.00    37.75     0.02
+24     0.00     0.00  23.43     0.00     1.68     0.00    32.92     0.00
+27     1.12     0.00   0.00     3.63     0.00     6.70    58.07     0.00
+23     0.00     0.00   0.00     3.42     0.02     0.00    19.42     0.02
+19     0.00     0.00   0.00     0.32     0.02     0.00    21.03     0.02
+22     2.00     0.00   0.03    37.07     0.00     0.00    26.38     0.00
+16     0.00     0.00   1.02    25.80     0.23     0.00    18.98     0.00
+28     0.20     0.00   0.30     0.52     0.20     9.97    70.03     0.00
+13     0.00     0.07   0.02     2.50     0.00     0.00     5.52     0.00
+14     0.00     0.00   0.00    11.32     0.00     0.00     7.75     0.00
+20     0.47     0.00   0.85     1.87     0.08     1.35    13.73     0.07
+25     0.05     0.07  14.02    10.82     0.00     0.02    28.77     0.00
+7      8.10     0.28   0.00     0.45     0.03     0.00     0.10     0.00
+5      0.00     0.00   0.00     0.25     0.03     0.00     0.03     0.18
+6      0.00     0.00   0.00     0.85     0.00     0.00     0.05     0.03
+3      1.65     0.50   0.00     0.55     0.00     0.00     0.05     0.00
+4      0.03     0.00   0.00     0.20     0.00     0.00     1.53     0.00
+2      0.00     0.00   0.00     0.03     0.00     0.00     0.75     0.00
+9      0.00     0.25   0.00     0.38     0.25     0.00     4.07     0.00
+12     0.00     0.00   0.25     0.25     0.00     0.00     6.00     0.00
+10     0.00     0.00   0.00     0.25     0.25     0.00     0.67     0.00
+11     0.00     0.00   0.00     0.25     0.25     0.00    17.70     0.25
+21     0.00     0.00   0.25     0.25     3.00     0.00     2.00     0.00
+   Polyjuni Polycomm Pohlnuta Ptilcili Barbhatc Cladarbu Cladrang Cladstel
+18     0.13     0.00     0.13     0.12     0.00    21.73    21.47     3.50
+15     0.23     0.00     0.03     0.02     0.00    12.05     8.13     0.18
+24     0.23     0.00     0.32     0.03     0.00     3.58     5.52     0.07
+27     0.00     0.13     0.02     0.08     0.08     1.42     7.63     2.55
+23     2.12     0.00     0.17     1.80     0.02     9.08     9.22     0.05
+19     1.58     0.18     0.07     0.27     0.02     7.23     4.95    22.08
+22     0.00     0.00     0.10     0.03     0.00     6.10     3.60     0.23
+16     0.02     0.00     0.13     0.10     0.00     7.13    14.03     0.02
+28     0.08     0.00     0.07     0.03     0.00     0.17     0.87     0.00
+13     0.02     0.00     0.03     0.25     0.07    23.07    23.67    11.90
+14     0.30     0.02     0.07     0.00     0.00    17.45     1.32     0.12
+20     0.05     0.00     0.12     0.00     0.00     6.80    11.22     0.05
+25     6.98     0.13     0.00     0.22     0.00     6.00     2.25     0.00
+7      0.25     0.00     0.03     0.00     0.00    35.00    42.50     0.28
+5      0.65     0.00     0.00     0.00     0.00    18.50    59.00     0.98
+6      0.08     0.00     0.00     0.08     0.00    39.00    37.50    11.30
+3      0.00     0.00     0.03     0.03     0.00     8.80    29.50    55.60
+4      0.10     0.00     0.05     0.00     0.00    15.73    20.03    28.20
+2      0.03     0.00     0.00     0.03     0.00     0.48    24.50    75.00
+9      0.25     0.00     0.25     0.25     0.00     0.46     4.00    84.30
+12     0.00     0.00     0.25     0.00     0.00     3.60    14.60    63.30
+10     0.25     0.00     0.25     0.00     0.00     1.30     8.70    84.30
+11     0.25     0.00     0.25     0.67     0.00     9.67    29.80    31.80
+21     0.25     0.25     0.25    10.00     3.00     0.70     4.70    10.90
+   Cladunci Cladcocc Cladcorn Cladgrac Cladfimb Cladcris Cladchlo Cladbotr
+18     0.30     0.18     0.23     0.25     0.25     0.23     0.00     0.00
+15     2.65     0.13     0.18     0.23     0.25     1.23     0.00     0.00
+24     8.93     0.00     0.20     0.48     0.00     0.07     0.10     0.02
+27     0.15     0.00     0.38     0.12     0.10     0.03     0.00     0.02
+23     0.73     0.08     1.42     0.50     0.17     1.78     0.05     0.05
+19     0.25     0.10     0.25     0.18     0.10     0.12     0.05     0.02
+22     2.38     0.17     0.13     0.18     0.20     0.20     0.02     0.00
+16     0.82     0.15     0.05     0.22     0.22     0.17     0.00     0.00
+28     0.05     0.02     0.03     0.07     0.10     0.02     0.00     0.02
+13     0.95     0.17     0.05     0.23     0.18     0.57     0.02     0.07
+14    23.68     0.22     0.50     0.15     0.23     0.97     0.00     0.00
+20     4.75     0.03     0.12     0.22     0.18     0.07     0.00     0.02
+25     0.80     0.12     0.57     0.17     0.15     0.07     0.00     0.00
+7      0.35     0.08     0.20     0.25     0.18     0.13     0.08     0.00
+5      0.28     0.23     0.23     0.23     0.10     0.05     0.00     0.00
+6      3.45     0.18     0.20     0.25     0.25     0.23     0.03     0.00
+3      0.25     0.08     0.25     0.25     0.15     0.10     0.03     0.00
+4      0.73     0.10     0.15     0.13     0.10     0.15     0.00     0.00
+2      0.20     0.00     0.03     0.03     0.05     0.03     0.03     0.00
+9      0.25     0.25     0.25     0.25     0.25     0.25     0.25     0.00
+12     1.30     0.00     0.25     0.25     0.25     0.25     0.00     0.00
+10     0.25     0.25     0.25     0.00     0.25     0.25     0.25     0.00
+11     2.53     0.25     0.25     0.25     0.00     0.25     0.00     0.00
+21     0.25     0.00     0.05     0.25     0.25     0.25     0.25     0.25
+   Cladamau Cladsp Cetreric Cetrisla Flavniva Nepharct Stersp Peltapht Icmaeric
+18     0.08   0.02     0.02     0.00     0.12     0.02   0.62     0.02     0.00
+15     0.00   0.00     0.15     0.03     0.00     0.00   0.85     0.00     0.00
+24     0.00   0.00     0.78     0.12     0.00     0.00   0.03     0.00     0.00
+27     0.00   0.02     0.00     0.00     0.00     0.00   0.00     0.07     0.00
+23     0.00   0.00     0.00     0.00     0.02     0.00   1.58     0.33     0.00
+19     0.00   0.00     0.00     0.00     0.02     0.00   0.28     0.00     0.00
+22     0.00   0.02     0.02     0.00     0.00     0.00   0.00     0.00     0.00
+16     0.00   0.02     0.18     0.08     0.00     0.00   0.03     0.00     0.07
+28     0.00   0.00     0.00     0.02     0.00     0.00   0.02     0.00     0.00
+13     0.00   0.07     0.18     0.02     0.00     0.00   0.03     0.02     0.00
+14     0.00   0.00     0.68     0.02     0.00     0.00   0.33     0.00     0.02
+20     0.00   0.02     0.15     0.00     0.00     0.02   0.00     0.00     0.00
+25     0.00   0.02     0.03     0.02     0.00     4.87   0.10     0.07     0.00
+7      0.00   0.00     0.05     0.00     0.23     0.20   0.93     0.00     0.03
+5      0.03   0.00     0.18     0.00     0.28     0.00  10.28     0.00     0.10
+6      0.00   0.03     0.35     0.00     0.08     0.00   0.03     0.00     0.00
+3      0.03   0.00     0.05     0.00     0.15     0.15   0.28     0.00     0.00
+4      0.00   0.05     0.28     0.05    10.03     0.00   0.95     0.00     0.00
+2      0.00   0.00     0.00     0.00     0.00     0.00   0.00     0.00     0.00
+9      0.00   0.25     0.25     0.25     0.67     0.00   0.00     0.00     0.00
+12     0.00   0.00     0.00     0.25     0.00     0.00   0.00     0.00     0.00
+10     0.00   0.00     0.25     0.25     0.25     0.00   0.25     0.00     0.00
+11     0.00   0.00     0.00     0.25     0.00     0.00   0.93     0.25     0.00
+21     0.00   0.00     0.00     0.67     0.00     0.00   0.00     0.00     0.00
+   Cladcerv Claddefo Cladphyl
+18     0.00     0.25     0.00
+15     0.00     1.00     0.00
+24     0.00     0.33     0.00
+27     0.00     0.15     0.00
+23     0.00     1.97     0.00
+19     0.00     0.37     0.00
+22     0.00     0.15     0.00
+16     0.00     0.67     0.00
+28     0.00     0.08     0.00
+13     0.00     0.47     0.00
+14     0.00     1.57     0.05
+20     0.00     1.20     0.00
+25     0.02     0.05     0.00
+7      0.00     0.10     0.00
+5      0.00     0.25     0.00
+6      0.00     0.28     0.00
+3      0.00     0.08     0.00
+4      0.05     0.08     0.00
+2      0.03     0.03     0.00
+9      0.00     0.25     0.25
+12     0.00     0.25     0.00
+10     0.00     0.25     0.25
+11     0.00     0.00     0.25
+21     0.00     0.40     0.00
+```
+]
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/mvexample-1.svg" style="display: block; margin: auto;" /&gt;
+]
+---
+# Reading Ordination Plots
+
+.pull-left[
+
+- The ordination graphs shows the main features of similarities and differences in the data
+
+- If two SUs are close to each other, they have similar communities
+- If two SUs are far away from each other, the communities differ
+
+- If two species are close to each other, they have similar occurrence
+  patterns, and occur most abundantly in SUs that are close to them
+
+- It can be assumed that environmental conditions are behind these
+  differences and we can identify the external variables that explain
+  the ordination structure
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/mvexample2-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Why Ordination?
+
+- Ordination provides a graphical summary of main structure in the data
+
+- Instead of looking at a huge number of variables with a huge number
+  of observations, we compress multidimensional data into two (or
+  three) dimensions that we can easily inspect and comprehend
+
+- Ordination is **descriptive**, but it can help us to understand the
+  main features of the data
+
+- Often ordination is *private:* we familiarize with the data so that
+  we can formulate research hypotheses, check the adequacy of our
+  hypothesis, and communicate the results to other people
+
+  - *Private:* we do it, but we do not tell anybody what we do in our privacy
+
+  - Ordination need not be published or shown to anyone to be useful for you
+
+- Sometimes we can build rigorous tests on ordination results: these
+  summarize the major structure and allow using simpler test
+  procedures
+
+  - Some ordination methods allow testing within themselves
+
+- Many people never need ordination, but some do &amp;mdash; that all
+  depends on your research questions
+
+---
+# The Purpose of These Lectures
+
+- Provide information on ordination for those who may need it
+
+- Even if you do not need them yourself, it is useful to understand
+  how to interpret publications that use ordination
+
+- These lectures are not about using ordination software, but they are
+  about the **methods**
+
+  - There are several alternative software implementations to perform
+    these analyses, although the lecture slides were written using
+    **R** statistical language and mainly with **vegan** package
+
+  - There are no **R** commands in these slides, but if you *want* to
+    see them, look at the
+    [source code](https://github.com/jarioksa/ordination101)
+    of these lectures
+
+- I avoid mathematics, but also over-simplification and
+  superficiality: I try to *explain* how these methods work in terms
+  of common statistical tools, for instance, regression analysis (and
+  that is about how complicated it becomes)
+
+- I would be really pleased if you understand what I say: Please
+  interrupt me and ask as soon as you get lost
+
+---
+# The Structure of These Lectures I
+
+In the first part of lectures I describe four main basic ordination
+methods:
+
+- Principal Components Analysis (PCA) is just an extension of
+  regression analysis, and a simple summary of the data. I also
+  explain why it fails often with ecological community data.
+
+- Correspondence Analysis (CA) is a variant of PCA, but that small
+  difference makes it much better for community data.
+
+- In Principal Coordinates Analysis (PCoA) the main focus is what we
+  actually mean with things being similar, and how we can use
+  ecological judgement in defining similarity.
+
+- Nonmetric Multidimensional Scaling (NMDS) is presented as a flexible
+  and robust tool that often is most reliable in finding interpretable
+  results.
+
+- I also explain how to interpet ordination results with the help of
+  external information, such as measurements of chemical or physical
+  parameters and other environmental conditions
+
+---
+# The Structure of These Lectures II
+
+In the latter part of lectures I describe how to use external
+environmental variables to *constrain* ordination. These methods are
+useful if we have a controlled experiment and we want to
+analyse the statistical significance of multivariate responses. Even
+with survey data, the use of external variables can make
+interpretation much easier. Some of the main themes are:
+
+- How constrained ordination is defined as an extension of regression
+  analysis, and how it can be applied in the context of PCA, CA and
+  PCoA.
+
+- How we can test the statistical significance of external variables
+  in multivariate setting.
+
+- How we can condition the analysis for some background variables and
+  remove their effects before main ordination.
+
+- How we can partition multivariate response to different sources
+  variation.
+
+&lt;!-- ********** PCA ************** --&gt;
+---
+class: inverse center middle
+
+# PCA: Principal Components Analysis
+
+PCA  is the  basic ordination  method and  the one  that Statisticians
+know. It is poor for most uses,  but we need to know PCA to understand
+how other methods improve upon it.  The main problem of PCA is that it
+is  linear, but  community  data are  nonlinear.
+---
+# From Regression to Ordination
+
+- What is the best possible predictor variable for a species? --- It
+  is the species itself!
+
+  - If you predict values of `\(y\)` with `\(y\)`, you get a perfect fit and
+    explain `\(y\)` completely (but what about other species?)
+
+- Some species can also be powerful in predicting abundances of
+  other species
+
+- The best possible predictor is such a (linear) combination of
+  species that explains abundances of all species as well as possible
+
+- That linear combination is the first PCA axis
+---
+# 3 Cryptogams in Reindeer Pastures
+ 
+&lt;img src="ordination101_files/figure-html/bottpredict-1.svg" style="display: block; margin: auto;" /&gt;
+---
+# Best Predictor
+&lt;img src="ordination101_files/figure-html/bottpc1-1.svg" style="display: block; margin: auto;" /&gt;
+---
+# What was Explained?
+
+- PCA explains the **variance** of the data: the squared
+  differences between observed values `\(y\)` and species means `\(\bar y\)`:
+  `\(\mathrm{Var}(y_j) = \sum_{i=1}^N(y_{ij} - \bar y_j)^2/(N-1)\)`
+  - Ordination always centres data so that species means `\(\bar y = 0\)`
+  
+  - The total variance (sum of species variances) is called **inertia**
+
+- In the example, the variances of three species were
+  357, 222.3, 859.5, with sum
+  1438.7, and the sum of residual variances of the PC
+  regression was 479.2
+
+- The variance explained by the first PC is the **eigenvalue** of the
+  axis, and it is the difference of total variance and residual
+  variance `\(\lambda_1 =\)` 959.5 which is
+  66.7% of total variance
+
+- The coefficients (0.384, -0.083, -0.92) of three species are
+  the **species scores** used in ordination diagrams, and they are also
+  regression coefficients that project centred species abundances to
+  the PC
+  - Ordination always centres data so that the intercept
+  is zero
+
+- The result of this projection are the sampling unit **(SU) scores**
+  that are used in ordination diagrams -- this is also called as the
+  **principal component**
+
+---
+# Second and Further Principal Components
+
+- Second PC has similar components, but is **orthogonal** to the
+  previous one:
+
+- Species scores and SU scores are orthogonal to (uncorrelated with)
+  corresponding scores in the previous axes
+
+- The second PC explains the largest possible amount of remaining
+  variance
+  - In the example, its eigenvalue is `\(\lambda_2 =\)` 372.9
+    which is  25.9% of total variance
+
+- The sum of all `\(K\)` eigenvalues is equal to the variances of all
+   species (inertia) `\(\sum_{k=1}^K \lambda_k = \sum_{j=1}^S \mathrm{Var}(y_j)\)`:
+   The axes decompose variance into independent ordered components
+
+- In modern software, we do not find second and further PCs one-by-one
+  with orthogonalization, but the interpretation of the results is
+  still similar
+
+---
+# Is This Circular?
+
+- We explain species with species &amp;mdash; and this sounds badly circular
+
+- We perform no statistical testing, and what looks regression
+  actually is **rotation** of species data
+
+- We only like to find a way of looking at the data so that some first axes
+  (say PC1 and PC2) show as much of the variance of the data as possible
+
+- Then we can ignore the later axes and say that a **major part** of
+  variation is displayed in the first dimensions that we
+  can plot
+
+- PCA is **not** a statistical method, but it is only a rotation of
+  the data
+
+---
+# Species Scores in Multidimensions
+
+.pull-left[
+
+- We had species scores for a single axis, but in 2 and more dimensions
+  we must look at all dimensions simultaneously
+
+- The coefficients together define the **direction** to which the
+  species abundance **increases** most steeply &amp;mdash; and it
+  **decreases** to the opposite direction
+
+- The response is linear in 2D: the contours of linear trend surface are
+  perpendicular to the arrow
+
+- The estimated abundances of all species on each SU can be read by
+  projecting the SU point to the arrow: PCA **approximates** data
+
+- Species were centred: The zero contour goes through the origin
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/plot3sp-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Distance and Direction From the Origin
+
+.pull-left[
+
+- In the origin, all species occur at their average abundances
+
+- The further away from the origin SU is situated, the more strongly
+  its species composition differs from the average
+
+- For species the angles between arrows indicate the similarity of
+  change, and the length of the arrow the steepness of the change:
+  right angle means no relation, zero angle identical response, and
+  direct angle opposite responses
+
+- Try yourself: where these species are most abundant and scarcest?
+  Which species attain highest abundances and where? Which species
+  replace each other and which are independent from each other?
+]
+
+.pull-right[
+
+&lt;img src="ordination101_files/figure-html/plot3sp2-1.svg" style="display: block; margin: auto;" /&gt;
+
+]
+---
+# Rotation in Species Space
+
+.pull-left[
+
+- In **species space** every species is an *axis* (or a *dimension*)
+
+- Each axis is at right angle against all other axes
+
+- The SUs are points, and the abundance of each species gives its location
+  in species axes
+
+- There can be a huge number of species axes, and we cannot see them all
+
+- We **rotate** the species space so that we see as much as possible of the 
+  locations of the points: This is the **PCA!**
+
+- Originally we had a *species*-dimensional space, and we *reduce* it
+  to two or three dimensional space
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/specspace-1.svg" style="display: block; margin: auto;" /&gt;
+[Please Click Me!](http://cc.oulu.fi/~jarioksa/opetus/metodi/3D/PCArotation/index.html)
+
+]
+---
+# Complete Reindeer Pasture Data
+
+.pull-left[
+
+- Analysis of complete data is pretty similar to the analysis of these
+  three species
+
+- PCA analyses variances and shows absolute differences from the species mean
+  `\(y - \bar y\)`: minor species change little in absolute units
+
+- Actually only some few species influence results, and the data are
+  not very multivariate
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/pcavare-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Explaining Variance
+
+.pull-left[
+
+- Abundant species have high variance, and PCA explains variance
+
+- It may be very easy to explain variance when only a few species
+  account for the most, because then data are not very
+  multidimensional
+
+- Minor species may be ecological indicators, but they have little
+  effect on community ordination with PCA
+
+- Three abundant cryptogams accounted for
+  78.8% of total variance in the complete
+  data set, and are dominant in PCA
+
+]
+
+.pull-right[
+
+&lt;img src="ordination101_files/figure-html/varabu-1.svg" style="display: block; margin: auto;" /&gt;
+
+]
+---
+# Equal Weights to All Species
+
+.pull-left[
+
+- Use correlation instead of variance and minimize residuals `\(1-R^2\)` in
+  PC regression: This gives equal weights to all species
+
+- Equalized data are more multidimensional, and scarce species will
+  also influence the result, and the ordination changes from the previous
+
+- PCA implies that species should be shown by arrows, but this
+  makes graphs very messy, and often it makes sense to drop arrows and
+  just show the species scores at arrowheads
+
+- They still should be interpreted like arrows: **Distance** and
+  **direction** from the origin counts
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/pcacorr-1.svg" style="display: block; margin: auto;" /&gt;
+]
+---
+class:  inverse center middle
+
+## PCA Trouble: It is Linear!
+---
+# Linear Method
+
+- PCA builds upon the idea of *linear regression*
+
+- PC axes are sometimes called as latent variables: unknown and hidden
+  real variables that we dig up from data
+
+- Community response to environmental variables is non-linear: PC axes
+  cannot find such variables
+
+&lt;img src="ordination101_files/figure-html/mtfgrad-1.svg" style="display: block; margin: auto;" /&gt;
+Mt Field (Tasmania): Fitted Responses
+---
+# Horseshoe: Beware!
+
+.pull-left[
+
+- If species have nonlinear, unimodal responses to gradients, the
+  gradient appears as a curve: **horseshoe artefact**
+
+- People often want to interpret axes as latent variables, but even a
+  single gradient is not an axis: **Beware**
+
+- Even if you are aware of the risk of horseshoe, it can hide other
+  shorter gradients: Using two dimensions for one gradient is wasteful
+  and confusing
+
+- In general, PCA **should not be used** for community data
+
+- PCA is useful for linear data, or for deriving new combined
+  variables for other analyses when PCA explains a large proportion of
+  variance
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/horseshoe-1.svg" style="display: block; margin: auto;" /&gt;
+PCA of the expected species responses of previous slide
+]
+---
+# Horseshoe is Common
+
+&lt;img src="ordination101_files/figure-html/morehorses-1.svg" style="display: block; margin: auto;" /&gt;
+---
+# When Would We Expect a Horseshoe?
+
+
+- **Always** with community data
+
+- Even when we cannot see the horseshoe, it may be hidden below the
+  crumble of noisy analysis
+
+- Horseshoe can hide underlying gradients and disperse their effect
+  over several PCs so that they cannot be found and interpreted
+
+- Horseshoe can be expected also in homogeneous data with short
+  gradients
+
+---
+# Niche for PCA
+
+.pull-left[
+
+- New synthetic variables from correlated measurements to avoid
+  problems of collinearity in statistical analysis
+
+  - Using PCs as explanatory variables in regression
+
+- For this PCA should explain a large amount of variance
+
+- Use only the subset of correlated variables that may be assumed to
+  describe the same underlying (latent) variable: **measurement
+  model** in **Factor Analysis**
+
+- Use correlations when variables are not measured in the same units
+
+- Do not use axes directly: they may not be parallel to interpretable
+  variables
+
+]
+
+.pull-right[
+
+&lt;img src="ordination101_files/figure-html/latent-1.svg" style="display: block; margin: auto;" /&gt;
+.small[
+Soil data for reindeer pastures
+]
+]
+
+&lt;!-- ********* CA ************ --&gt;
+---
+class: inverse center middle
+
+# CA: Correspondence Analysis
+
+Correspondence Analysis is an eigenvector method just like PCA, and it
+can be seen as its variant. However, this small difference makes it
+handle nonlinear species responses better than PCA. For community
+data, CA is usually a much better alternative than PCA.
+
+---
+# Correspondence Analysis
+
+- In PCA we explain the differences of species from their averages
+  `\(y_{ij} - \bar y_j\)` using their mean squares (variance) as a measure
+  of goodness of fit
+
+- In CA the expected value is derived both from SUs and species,
+  and the goodness of fit is `\(\chi^2\)`
+
+- We first scale the observed data so that their sum is one
+  `\(\left( \sum_{i=1}^N \sum_{j=1}^S y_{ij} = 1 \right)\)`
+  &amp;mdash; that is, we divide data with their total
+
+- If all communities have identical species composition, and all
+  species occur in equal proportion in all SUs, then the expected
+  abundance is `\(r_i c_j\)` where `\(r_i\)` is row (SU) sum and `\(c_j\)` is the
+  column (species) sum: This takes the place of `\(\bar y_j\)` of PCA
+
+- We look at proportional difference
+  `\((y_{ij} - r_i c_j)/\sqrt{r_i c_j}\)`, and its square is
+  `\(\chi^2 = \sum_i \sum_j (y_{ij} - r_i c_j)^2/(r_i c_j)\)`:
+  This takes the place of variance of PCA
+
+- Then we proceed with regression to find the axes, just like in PCA
+  (except that we need to use weights `\(r_i\)`, `\(c_j\)`)
+
+---
+# Small But Important Difference
+
+.pull-left[
+
+- CA is based on similar regression as PCA, but with
+  `\(\chi\)`-standardized data and weights
+
+- Regression is linear, but *observed* values of data rather pack
+  together so that high values are close to each other along the axis
+
+- The response of species can be approximately unimodal: This matches
+  the gradient model of species responses
+
+- The solution can be better related to environmental variables than in PCA
+
+- CA is still **not** a completely unimodal ordination and it still
+  shows a curve artefact, but not as garbled as PCA
+
+]
+
+.pull-right[
+
+&lt;img src="ordination101_files/figure-html/cagam-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# PCA Orders Linearly, CA Packs
+
+.pull-left[
+&lt;img src="ordination101_files/figure-html/pcatabasco-1.svg" style="display: block; margin: auto;" /&gt;
+**PCA:** Rows and columns ordered by PC1
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/catabasco-1.svg" style="display: block; margin: auto;" /&gt;
+**CA:** Rows and columns ordered by CA1
+]
+
+---
+# More Clearly in Sparse Data
+
+.pull-left[
+&lt;img src="ordination101_files/figure-html/pcatabadune-1.svg" style="display: block; margin: auto;" /&gt;
+**PCA:** Dutch Dune Meadows
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/catabadune-1.svg" style="display: block; margin: auto;" /&gt;
+**CA:** Diagonally structured table
+]
+---
+# CA Preserves Order
+
+- CA can also have a curve artefact with dominant long gradient, but
+  it is not garbled and involuted like the PCA horseshoe
+
+- First CA axis preserves the correct ordering: CA is a **seriation method** 
+
+&lt;img src="ordination101_files/figure-html/abernethy-1.svg" style="display: block; margin: auto;" /&gt;
+.pull-right[
+Abernethy Forest pollen data (5515 to 12145 BP)
+]
+---
+# Unimodal Responses in 2D
+
+.pull-left[
+- CA packs species also in multidimensional space
+
+- Instead of an arrow of increase, the species score may be regarded
+  as a *centre of abundance*
+
+- It is said that CA approximates the unimodal model
+
+- We may think that the species scores gives the species maximum and
+  the abundance decreases to every direction from the centroid given
+  by the species score
+
+- In PCA species close to the origin changed little and was poorly
+  presented by the ordination, but in CA it really may have its
+  optimum there
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/cascores-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Numbers and Interpretation
+
+.pull-left[
+
+- Sum of all eigenvalues (inertia) `\(\sum_k \lambda_k = \chi^2\)`, and
+  `\(\lambda_k / \chi^2\)` gives the proportion explained by the axis
+
+- This inertia is **not** variance but `\(\chi^2\)`, and eigenvalues or percentages
+  cannot be compared with PCA
+
+- The eigenvalue is bound to be `\(\lambda \le 1\)` (and `\(\lambda \ge 0\)`)
+
+- High eigenvalue is good, but too high (say, `\(\lambda &gt; 0.7\)`) are
+  suspicious: disjunct or partly disjunct data where a group of SUs
+  shares hardly anything (or nothing) with others
+
+- Species scores can be seen as points indicating species optima
+  instead of arrows of increase in PCA
+
+- Both species and SU scores are **weighted averages** of each other
+  &amp;mdash; but exact relationship depends on scaling in graphs
+
+]
+
+.pull-right[
+
+&lt;img src="ordination101_files/figure-html/caplot-1.svg" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+# Weighted Averages and Scaling
+
+.pull-left[
+&lt;img src="ordination101_files/figure-html/caspecwa-1.svg" style="display: block; margin: auto;" /&gt;
+**Dots:** SUs, size: *Lolium perenne*, **Text:** species
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/casitewa-1.svg" style="display: block; margin: auto;" /&gt;
+**Text:** SUs, **Dots:** species, size: abundance in SU 18
+
+]
+---
+# Rare Species
+
+.pull-left[
+
+- Rare species are often extreme in CA
+
+- CA explains deviation from expected abundance, and it expects every
+  species occur at every SU &amp;mdash; rare species occur only in one or
+  two
+
+- CA assesses deviation as proportional to expected &amp;mdash; rare
+  species have low expected values and look extreme
+
+- CA is weighted, and rare species have low weights &amp;mdash; they do
+  not influence ordination of SUs or other species very much
+
+- Some people tell you to routinely remove rare species from the data,
+  but I do not recommed doing so
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/carare-1.svg" style="display: block; margin: auto;" /&gt;
+Bryce Canyon, species scores
+]
+---
+class: inverse center middle
+
+# Interpretation: Ordination and External Variables
+
+Gradient model is the deep idea of ordination: If sampling units are
+close to each other in ordination, they occur in similar environments,
+and if they are far away in ordination, the environments differ. If our
+ordination model is such that it can be assumed to be consistent with
+gradient model (*i.e.*, it is able to handle unimodal species
+responses), we can try to identify the underlying environmental
+variables that cause the ordination structure.
+
+---
+## Fitted Vectors
+
+.pull-left[
+
+- Most popular method of displaying continuous variables
+
+- Can show many variables in one graph
+
+- Implies a **linear trend** surface, similarly as species arrows in PCA
+
+- **Direction** shows the steepest change in variable: the direction
+  of the **gradient**
+  - Gradients are **not** parallel to axes: do **not** interpret axes, but gradients
+
+- **Length** shows the relative importance or the strength of the variable
+
+- The arrow is drawn from the origin and shows the direction of
+  increase: there is equally strong **decrease to opposite** direction
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/envfit-1.svg" style="display: block; margin: auto;" /&gt;
+Reindeer Pastures and Soil data
+]
+---
+# Linear Trend Surface: Is it Adequate?
+
+&lt;img src="ordination101_files/figure-html/ordisurf-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# Significance tests
+
+.pull-left[
+
+- The strength of the fitted vector is given by the correlation `\(r\)`
+  (or its square `\(r^2\)`) to the direction of the arrow head
+
+- **Permutation tests:** Rows of environmental variables are shuffled
+    into random order and `\(r^2\)` is re-calculated
+
+- The `\(P\)`-value is the probability that `\(r^2\)` of randomized values is
+  larger or equal to the observed value of fitted vector
+
+- If this probability is low, say `\(P \le 0.05\)`, the variable is often
+  regarded as significantly different from random
+
+- Each variable is fitted independently, and other (correlated)
+  variables do not influence its significance
+
+]
+
+.small[.pull-right[
+
+```
+              CA1      CA2     r2 Pr(&gt;r)    
+N         0.47470 -0.88015 0.2196  0.102    
+P         0.44827  0.89390 0.3054  0.029 *  
+K         0.73616  0.67680 0.1773  0.126    
+Ca        0.69724  0.71684 0.3064  0.025 *  
+Mg        0.77318  0.63419 0.2466  0.057 .  
+S         0.05137  0.99868 0.0902  0.361    
+Al       -0.97491 -0.22260 0.4995  0.001 ***
+Fe       -0.96390 -0.26627 0.3682  0.012 *  
+Mn        0.91444  0.40473 0.4750  0.003 ** 
+Zn        0.77039  0.63758 0.1766  0.135    
+Mo       -0.63809 -0.76997 0.0539  0.593    
+Baresoil  0.97947 -0.20161 0.2533  0.056 .  
+Humdepth  0.91602  0.40112 0.4524  0.002 ** 
+pH       -0.99831  0.05818 0.2187  0.076 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Permutation: free
+Number of permutations: 999
+```
+]]
+
+---
+# Categorical Variables (Factors)
+
+.pull-left[
+
+- For one factor we can show its value for each point (and with tricks
+  for two or three factors)
+
+- The mean location or the **centroid** can be shown for several factors
+
+- We also must assess the dispersion of points about the centroid
+  &amp;mdash; for this there are several graphical tools (next slide) for
+  one factor in time
+
+- Goodness of fit can be assessed as the proportion of total variance
+  of points that can explained by the centroids
+
+  - `\(r^2\)` is the same statistic as for vectors, and for factors it
+    gives the proportion of variance accounted for by the factor
+    centroids
+
+
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/factor-1.svg" style="display: block; margin: auto;" /&gt;
+]
+---
+## Displaying Factors
+
+&lt;img src="ordination101_files/figure-html/factorshow-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# Significance Tests for Factors
+
+.pull-left[
+.small[
+
+```
+Centroids:
+                 CA1     CA2
+ManagementBF -0.7258 -0.1413
+ManagementHF -0.3867 -0.2960
+ManagementNM  0.6517  1.4405
+ManagementSF  0.3376 -0.6761
+
+Goodness of fit:
+               r2 Pr(&gt;r)   
+Management 0.4441  0.003 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Permutation: free
+Number of permutations: 999
+```
+]
+
+- **Confidence ellipse** is derived from Standard Error ellipse and
+    shows the likely location of the centroid
+    - SD ellipse shows the dispersion of points
+
+- If confidence ellipses do not overlap, they are approximately
+  different at the given level
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/confell-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Lessons
+
+- Fitted vectors are the most concise method of displaying the effects
+  of continuous environmental variables, **but...**
+
+- They imply a linear trend, and you should always check that this is adequate
+
+- The environmental variables are not usually parallel to axes, but
+  they are oblique
+
+- You should interpret the directions of the gradients (and the arrow
+  points to the steepest gradient) instead of axes
+
+- You should **never** **interpret** **axes**, but directions in the
+  ordination space
+
+- Significance tests can help in interpretation of results, but they
+  should not be trusted blindly (or not at all): they are only correlations
+
+---
+class: inverse center middle
+
+# PCoA: Principal Coordinates Analysis
+
+Principal Coordinates Analysis (PCoA) uses dissimilarities among SUs
+instead of rectangular data of SUs and variables. If dissimilarities
+are Euclidean distances, then PCoA is equal to PCA. However, the
+method can be used with other dissimilarities, and often these are
+useful for community analysis. PCoA is also known as metric or classic
+multidimensional scaling.
+---
+# Ordination of Distances
+
+- PCA was based on variances and linear projections of species when
+  deriving principal components from regressions
+
+- The same information can be extracted from distances among SUs
+
+- More precisely, these distances are known as Euclidean distances in
+  the species space
+
+- Why are they called **Euclidean**? &amp;mdash; Because they **are**
+  distances in Euclidean space!
+
+- In species space, SUs are points on species axes that are at right
+  angle to each others. The *difference* of species `\(j\)` abundance for two
+  SUs `\(i\)` and `\(k\)` is `\(y_{ij}-y_{kj}\)` which is the *leg* or *cathetus* of a
+  right-angled triangle, and the *squared* Euclidean distance of these two SUs
+  over all *catheti* (species) is the squared *hypotenuse*
+  `\(d_{ik}^2 = \sum_{j=1}^S (y_{ij}-y_{kj})^2\)`
+
+- It makes no sense to use Euclidean distances in PCoA, because PCA
+  will give the same result more easily, but we can use other
+  dissimilarities which are more useful in ecology
+
+- These dissimilarities are handled similarly as Euclidean distances,
+  but the results may be more useful (although there may be some
+  geometrical glitches that we can usually ignore)
+
+- All ordination methods we discuss are distance-based, and
+  eigenvector methods are based on Euclidean distances (PCA) or weighted
+  Euclidean distances of transformed data (CA)
+
+---
+## What is Wrong with Euclidean Distances?
+
+- **They have no fixed upper limit,** but distances can vary among SUs
+    that have nothing in common, and communities with high abundances
+    appear more different than communities with low abundances
+
+    - This can be cured with Euclidean distances of **transformed
+      data**
+    - For instance *Hellinger* or *Chord* distances have an
+      upper limit if there are no shared species
+      
+    - If a distance can be expressed as a Euclidean distance of
+      transformed data, it is better to use PCA with transformed data
+
+- **They are based on squared differences** giving undue influence to
+    exceptional high abundances
+
+    - Instead of squared differences `\((y_{ij}-y_{kj})^2\)` we can use
+      absolute differences `\(|y_{ij}-y_{kj}|\)`: *Manhattan* or
+      *city-block* distances
+      
+    - Some dissimilarity measures combine both points: Bray-Curtis
+      dissimilarity is based on absolute differences and is scaled to
+      maximum value of one:
+      `\(d_{ik} = \frac{\sum_j |y_{ij}-y_{kj}|}{\sum_j (y_{ij}+y_{kj})}\)`
+
+- **Research interest dictates** to use a specific non-Euclidean
+    dissimilarity index
+---
+# Example: beta Diversity
+
+.pull-left[
+
+- We want to study Whittaker's beta diversity
+  `\(\beta = \gamma/\bar \alpha -1\)`, where `\(\gamma\)` is the number of species in
+  pooled communities, and `\(\bar \alpha\)` is the average number of species in
+  communities
+
+- For two communities of `\(A\)` and `\(B\)` species with `\(J\)` shared species, we have
+  `\(\gamma = A+B-J\)` and `\(\bar \alpha = (A+B)/2\)` giving
+`$$\beta=\frac{A+B-J}{(A+B)/2}-1$$`
+`$$~=\frac{2(A+B-J)}{A+B}-\frac{A+B}{A+B}$$`
+`$$~=\frac{A+B-2J}{A+B}$$`
+   which is Sørensen dissimilarity
+
+]
+
+.pull-right[
+
+&lt;img src="ordination101_files/figure-html/unnamed-chunk-4-1.svg" style="display: block; margin: auto;" /&gt;
+Reindeer Pastures, `\(\beta\)`-diversity, size Shannon `\(H'\)`
+]
+---
+# Example 2: Phylogenetic Distance
+
+.pull-left[
+
+- In normal dissimilarities, all species are regarded as equal
+
+- If species are related, they would not contribute a full independent
+  species to the dissimilarities
+
+- Here we use Rao distance which is one of many phylogenetic
+  dissimilarity indices (and they can equally well be used for
+  functional traits *etc.*)
+
+- We put a limit: If species have diverged more than 65 Myr ago, they
+  are regarded as completely independent
+
+- PCoA is distance-based, and has no information on species, but these
+  can be projected to the ordination afterwards similarly as species
+  scores in PCA
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/unnamed-chunk-5-1.svg" style="display: block; margin: auto;" /&gt;
+Data for Tree: Zanne *et al* (2014), *Nature* **506,** 89&amp;mdash;92.
+]
+---
+# Example 2: Phylogenetic Distance
+
+&lt;img src="ordination101_files/figure-html/unnamed-chunk-6-1.svg" style="display: block; margin: auto;" /&gt;
+---
+class: inverse center middle
+
+# NMDS: Nonmetric Multidimensional Scaling
+
+PCA, CA &amp; PCoA are eigenvector methods. They map community
+dissimilarities linearly so that with the maximum number of dimensions
+the dissimilarities are exactly reproduced, but some first dimensions
+show as much as possible of the dissimilarities. NMDS is completely
+different: it maps dissimilarities non-linearly onto low-dimensional
+ordination. It assumes very little of data or response models and is
+therefore more robust than eigenvector methods with their strict
+parametric mapping.
+---
+# Eigenvector Methods: Linear Mapping
+
+.pull-left[
+
+- Eigenvector methods *decompose* observed dissimilarities
+
+- With all possible axes, they reproduce exactly observed dissimilarities
+- First axes show the largest possible amount of observed dissimilarities
+
+- They map observed dissimilarities linearly so that they approach the
+  original dissimilarities from below: each new axis *adds* to
+  estimated dissimilarities
+
+- Eigenvector methods may have their fixed way of defining observed
+  dissimilarities: **PCA** uses Euclidean distances and **CA** uses
+  `\(\chi\)`-distances (which are Euclidean distances of
+  `\(\chi^2\)`-transformed data)
+
+]
+
+.pull-right[
+
+&lt;img src="ordination101_files/figure-html/unnamed-chunk-7-1.svg" style="display: block; margin: auto;" /&gt;
+Oribatid mites: 2-dim CA of `\(\chi\)`-distances
+
+]
+
+---
+## NMDS: Monotone Mapping
+
+.pull-left[
+- NMDS maps dissimilarities non-linearly onto low-dimensional ordination
+
+- **Monotone regression**: Euclidean distances of points in the
+    ordination space are **rank-order similar** to community
+    dissimilarities
+
+
+- Rank-order similar: if *observed dissimilarity* `\(d_{a} &lt; d_{b}\)` then
+  Euclidean *ordination distance* `\(\delta_{a} \le \delta_{b}\)`
+  
+- Rank orders of observed dissimilarities cannot be exactly
+  preserved by rank-orders of ordination distances in low-dimensional
+  solutions, and this causes **stress**
+
+- **Stress:** scatter of observed dissimilarities against
+    expected monotone regression
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/unnamed-chunk-8-1.svg" style="display: block; margin: auto;" /&gt;
+.small[Oribatid mites: NMDS in 2D]
+
+]
+---
+## Stress and Iterations
+
+- Stress is the spread of points from the
+  monotone regression step line
+
+- The ordination space is *metric* and Euclidean: the *non-metric*
+  refers only to the regression used to transform observed
+  dissimilarities (the step line in plots)
+
+- NMDS is computationally much more demanding than eigenvector methods
+  that are based on linear algebra (and the moden algorithms are
+  really good in linear algebra)
+
+- The solution is iterative and there is no guaranteed convergence,
+  but we must repeat and judge the solutions for goodness and
+  stability
+
+- Stress is (in theory) in the range `\(0 \ldots 1\)`, but in practice
+  stress `\(&lt; 0.1\)` is extremely good, stress close to `\(0\)` hints to
+  problems (like insufficient data or disjunctions), and random
+  configurations in 2D have stress about `\(0.4\)`, leaving stress `\(0.2\)`
+  usually as very good
+
+---
+# Advantages of NMDS
+
+- Eigenvector methods can give good ordination if the
+  ordination model is similar to the model of species responses to
+  gradients
+
+  - PCA model is linear and poor, but CA can cope with some regular
+    unimodal response models and give good results
+
+- NMDS does not assume any specific response model, but it can adjust
+  to many models &amp;mdash; even non-regular &amp;mdash; and this makes it
+  **robust**
+
+- Robust: assumes little of data and tolerates violations of
+  assumptions
+
+- Can use ecological more meaningful dissimilarities than Euclidean
+  distances and `\(\chi\)`-distances of PCA and CA
+  
+  - Shares this feature with PCoA (which still applies Euclidean
+    mapping of these dissimilarities)
+
+- Champion in tests with simulated data with non-regular unimodal
+  species responses
+
+---
+## How Eigenvector Methods Differ from NMDS?
+
+- **Origin:** shows the average (expected) community composition in
+    eigenvector methods, but has **no** special meaning in NMDS
+
+    - It is convenient to have the origin in the middle of the
+      ordination in NMDS, but it means nothing: All that means is the
+      configuration of points and distances between points &amp;mdash; and
+      these do not depend on the location of the origin
+
+- **First axis** shows the major variation of the *data* (in terms of
+    inertia, either variance of `\(\chi^2\)`) in eigenvector methods, but
+    has **no** special meaning in NMDS
+
+    - It is convenient to rotate NMDS space so that the first axis
+      shows the major variation of the *ordination*, but it means
+      nothing: All that means is the configuration of points and
+      distances between points &amp;mdash; and these do not depend on the
+      directions of the axes
+
+    - Alternatively NMDS can be rotated parallel to environmental
+      variables
+
+- What is in common is that NMDS and Eigenvector methods (PCA, CA, PCoA)
+  have **metric ordination space** that can be interpreted in the same way
+  for the configuration of points and using environmental variables
+---
+# These NMDS Ordinations are Identical
+
+&lt;img src="ordination101_files/figure-html/unnamed-chunk-9-1.svg" style="display: block; margin: auto;" /&gt;
+---
+## Example: Abernethy Pollen Profile
+
+&lt;img src="ordination101_files/figure-html/abergrid-1.svg" style="display: block; margin: auto;" /&gt;
+---
+## Stress Plot Indicates NMDS Does Best
+
+&lt;img src="ordination101_files/figure-html/aberstress-1.svg" style="display: block; margin: auto;" /&gt;
+---
+# Is NMDS Credible?
+
+.pull-left[
+
+- NMDS is the only method that does not produce a curve &amp;mdash; but is
+  this credible?
+
+- There is a cycle in SU sequence in the oldest times. Species scores
+  indicate that the cycle is *Rumex* &amp;mdash; *Anthyllis vulneraria*
+  &amp;mdash; Graminoids &amp;mdash; *Artemisia* and then going to the linear
+  succession *Juniperus communis* &amp;mdash; *Betula* &amp;mdash; *Pinus
+  sylvestris* &amp;mdash; *Alnus glutinosa*
+
+- This looks like a credible cycle of pioneer communities (*Rumex*)
+  and tundra steppes (*Artemisia*) before going to secular heath and
+  forest succession
+
+- All other methods had a curve that hid the periglacial pioneer cycle
+
+]
+
+.pull-right[
+
+&lt;img src="ordination101_files/figure-html/abernmds-1.svg" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+class: inverse center middle
+
+# Constrained Ordination
+
+Constrained ordination is also known as canonical ordination. In
+unconstrained ordination we used only community data to find its main
+structure, and interpreted the results via fitting environmental
+variables to the ordination. In constrained ordination we derive the
+result directly through environmental variables (constraints) and find
+only that structure in the communities that can be explained with
+constraints. The results explain a smaller proportion of total
+variation than unconstrained ordination, but they are more strongly
+interpretable with the constraints. Constrained ordination allows
+for statistical testing of the constraints, and it is most useful in
+the analysis of designed experiments.
+
+---
+# Constrained Ordination
+
+- In *unconstrained* ordination (PCA, CA, PCoA) we explained species
+  with species and found the best possible linear predictors of
+  observed values
+
+- In *constrained* ordination we explain species with *external
+  variables* (such as environment)
+
+- This gives *poorer* results than unconstrained ordination, but more
+  easily interpretable because we constrain the results with the very
+  same variables we use in interpretation
+
+- In unconstrained ordination we first find the ordination and then
+  see how it can be explained
+
+- In constrained ordination we build the ordination so that it can be
+  explained with the environmental variables (constraints)
+
+- We use external variables, and we can test their significances
+
+---
+# From Regression to Constrained Ordination
+
+- Constrained Ordination: Find the *linear combination* of
+  **constraints** that best explains all species
+
+
+.pull-left[
+
+**Method 1**
+
+- Use constraints as explanatory variables, and find their linear
+  combination that has the smallest residual variation for all species
+
+- Use the same linear combination for all species and that is the
+  first constrained ordination axis
+
+- This directly gives *regression coefficients* for environmental
+  variables and the first constrained axis
+
+]
+
+.pull-right[
+
+**Method 2**
+
+- Fit a linear regression separately for all species using all
+  constraints as explanatory variables
+
+- Each species has a different regression model
+
+- Ordinate the fitted values of species as in unconstrained ordination
+
+- This directly gives *species scores* and the first constrained axis
+
+]
+
+---
+# Method 1: LC of Constraints
+
+&lt;img src="ordination101_files/figure-html/rdamethod1-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# Method 2: Ordination of Fitted Values
+
+&lt;img src="ordination101_files/figure-html/rdamethod2a-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# Method 2: Ordination of Fitted Values
+
+&lt;img src="ordination101_files/figure-html/rdamethod2b-1.svg" style="display: block; margin: auto;" /&gt;
+---
+# What Was Explained?
+
+- **Method 1** explained *total* variance
+
+  - It was 1438.7, the first axis explained
+    `\(\lambda_1=\)` 398.8, and all constrained
+    axes explained `\(\Lambda_k=\)` 505.2
+
+- **Method 2** explained the variance of *fitted values*
+
+  - It was `\(\Lambda_k=\)` 505.2, and the first
+    axis explained `\(\lambda_1=\)` 398.8
+
+- We had two constraints (`Al` &amp; `P`) and therefore we had two constrained
+  axes: the *rank* of constraints was 2
+
+- Both methods gave the same two constrained axes and the same
+  eigenvalues (explained variance)
+
+- The sum of first two *un*constrained eigenvalues was
+  1332.4 which is more than
+  constrained `\(\Lambda_k\)`
+
+- Unconstrained PC axes are the best possible linear predictors and
+  anything else must be worse
+
+- Constrained ordination should have *clearly* lower eigenvalues than
+  unconstrained &amp;mdash; or constraints did not have any effect!
+
+---
+# Flavours of Constrained Ordination
+
+- **Redundancy Analysis (RDA):** extends PCA
+
+  - Explains variance, shows Euclidean distances
+
+  - PCA was poor for community data, but RDA ordinates fitted values
+    &amp;mdash; and these are linear! &amp;mdash; and RDA works OK with
+    communities
+
+  - It is still best to use correlations or Hellinger distances to
+    tune down superdominant species
+
+- **Constrained or Canonical Correspondence Analysis (CCA):** extends CA
+
+  - Explains `\(\chi^2\)`, shows `\(\chi\)`-distances
+  
+  - The most popular approach (but this depends on your cultural
+    background: Francophones prefer RDA)
+
+- **Distance-based Redundancy Analysis (dbRDA):** extends PCoA
+
+  - Explains any squared dissimilarities, shows any dissimilarities
+  
+  - If you are using dissimilarities elsewhere, it is consistent to
+    use them in constrained ordination
+
+---
+class: inverse center middle
+
+## Looking At the Constrained Ordination
+
+---
+# The Scores
+
+- **Species scores**
+
+  - These are also regression coefficients that derive the constrained
+    axis from species data
+
+- Two kind of **SU scores**
+
+  - **Linear combination (LC) scores** which are the linear
+      combinations of *constraints*
+
+  - Together with the species scores, the LC scores find the *fitted*
+    values of each species (of method 2)
+
+  - **Weighted Averages (WA) scores** which are derived from the
+      species scores and observed values of the input community
+
+  - Together with the species scores, the WA scores estimate the
+    *observed* values of each species
+
+- **Biplot scores** for constraints
+
+  - These are correlations with the constraints and the LC scores for SUs
+
+  - They are found separately for each constraining variable, and
+    other constraining variables do not influence their values
+
+---
+# Interpretation of Biplot Scores
+
+.pull-left[
+
+- LC scores really are linear combinations of constraints, and when
+  projected onto biplot arrows, they are the observed values of constraints
+
+- When WA scores are projected onto biplot arrows, they give the
+  prediction of environmental conditions from species data:
+  bioindication, reconstruction of environment
+
+- All biplot arrows have correlation `\(r=1\)` over all constrained axes:
+  the LC scores are made of them, and therefore the correlation is
+  perfect
+
+- We can also have *regression scores* which together with all other
+  constraints define the fitted values of community, but they are
+  difficult to interpret and never used in graphics
+
+]
+
+.pull-right[
+
+&lt;img src="ordination101_files/figure-html/rdabp-1.svg" style="display: block; margin: auto;" /&gt;
+Complete Reindeer Pasture Data 
+]
+
+---
+# LC Scores Are Constraints
+
+&lt;img src="ordination101_files/figure-html/bpxy-1.svg" style="display: block; margin: auto;" /&gt;
+---
+# Factor Constraints
+
+.pull-left[
+
+- Factors (categorical variables) are coded as **contrasts**
+
+- For instance, a factor with four classes is coded by three indicator
+  variables that express the difference against the first class
+
+  - **0**: another class, **1**: same class
+
+- Ordered factors can be expressed as polynomial contrasts that
+  describe the linear, quadratic, cubic *etc* effects of the variable
+
+- These contrasts are used as ordinary continuous variables in the analysis
+
+- Contrasts can be coded in many alternative ways, but all give the
+  same fitted results and the same ordination
+
+]
+
+.pull-right[
+
+```
+*Dunes -- Management:
+```
+
+```
+   HF NM SF
+BF  0  0  0
+HF  1  0  0
+NM  0  1  0
+SF  0  0  1
+```
+
+```
+
+*Dunes -- Moisture (ordered factor):
+```
+
+```
+          .L   .Q      .C
+[1,] -0.6708  0.5 -0.2236
+[2,] -0.2236 -0.5  0.6708
+[3,]  0.2236 -0.5 -0.6708
+[4,]  0.6708  0.5  0.2236
+```
+]
+
+---
+# Ordination Display of Factors
+
+.pull-left[
+
+- Factors are displayed by the centroids of their levels
+
+- The ordered factors can be described by biplot arrows for their
+  polynomial contrasts in addition to their centroids
+
+- The types of contrasts do not influence the centroids, and we rarely
+  need to know the exact type of contrasts used
+
+  - Contrasts are internal to the program, and there rarely is reason
+    to show them in graphics
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/dunefact-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# LC and WA Scores for Factors
+
+.pull-left[
+
+- LC scores are linear combinations of constraints: and this means
+  that they really are defined by constraints only
+
+- Equal constraints means equal LC scores &amp;mdash; and the species
+  composition has no influence!
+
+- For a single factor constraint, LC scores with the same factor level
+  will fall into one and same point
+
+- WA scores show scatter with respect to LC scores: they tell how well
+  species composition can *predict* the constraints
+
+- LC are completely defined also for several factors and continuous
+  variables, but with larger number of constraints this is not
+  immediately visible
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/lcwa-1.svg" style="display: block; margin: auto;" /&gt;
+Dune Meadows constrained by Management
+]
+
+---
+# WA Scores &amp; Prediction of Environment
+
+.pull-left[
+
+- LC scores *are* the environment, but WA scores are based on
+  community composition
+
+- WA scores are as similar to LC scores as possible: they predict the
+  environment as well as the community composition is able (with linear
+  algebra of ordination)
+
+- This is known as biondication, calibration or reconstruction of
+  environment in the various fields of Ecology, Environmental
+  Sciences and Palaeoecology
+
+- We should always use *cross-validation* to assess the goodness of
+  prediction: test performance of the method in another subset of the
+  data than was used in constrained ordination
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/rdacalib-1.svg" style="display: block; margin: auto;" /&gt;
+.small[rda(formula = decostand(mite, "hell") ~ WatrCont + SubsDens + Topo + Shrub, data = mite.env)]
+]
+
+---
+class: inverse center middle
+
+## Permutation Tests
+
+Constrained Ordination is based on regression with external variables,
+and this allows for statistical analysis of constraints. The response
+data are multivariate, correlated and non-Normal, and we cannot use
+normal parametric tests, but we must use permutation tests.
+
+---
+# Permutation Tests
+
+- The goodness of ordination solution is analysed using similar
+  `\(F\)`-statistic as in ordinary ANOVA
+`$$F = \frac{\Lambda_k/p}{\Lambda_r/(n-p-1)}$$`
+  where `\(\Lambda_k\)` is the constrained inertia explained by `\(p\)`
+  constraints, `\(\Lambda_r\)` is the inertia of residuals, and `\(n\)` is
+  the number of SUs
+
+- The total inertia `\(\Lambda\)` (variance, `\(\chi^2\)`, squared
+  dissimilarities) is decomposed as `\(\Lambda = \Lambda_k + \Lambda_r\)`
+
+- In permutation test the response is shuffled into random order, the
+  ordination is repeated and `\(F\)` is re-evaluated
+
+- This gives us a great number of permutation `\(F\)`-values of randomized data
+
+- The observed `\(F\)` is put among the permutation `\(F\)`, and all `\(F\)` are
+  ordered by magnitude
+
+- The `\(P\)`-value is the proportional rank of observed `\(F\)`: this gives
+  the probability to have similar or better `\(F\)` in random data
+
+- If we have 999 permutations and we add the observed `\(F\)` to these,
+  the proportial ranks are for 1000 values, and the lowest possible
+  `\(P=\)`  0.001
+
+---
+# Overall Test
+
+.pull-left[
+.small[
+
+```
+Permutation test for cca under reduced model
+Permutation: free
+Number of permutations: 999
+
+Model: cca(formula = dune ~ A1 + Management + Moisture, data = dune.env)
+         Df ChiSquare      F Pr(&gt;F)    
+Model     7    1.1392 2.0007  0.001 ***
+Residual 12    0.9761                  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+]
+
+- `Management` has 4 factor levels and uses 3 contrasts, `Moisture` is a
+  4-level ordered factor and uses 3 contrasts, and `A1` is continuous
+  variable, and together these use 7 degrees of freedom, and the total
+  inertia is 2.115 giving
+
+`$$F = \frac{1.139/7}{0.976/(20-7 -1)}$$`
+
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/anova-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Terms: Sequential Tests
+
+.pull-left[
+.small[
+
+```
+Permutation test for cca under reduced model
+Terms added sequentially (first to last)
+Permutation: free
+Number of permutations: 999
+
+Model: cca(formula = dune ~ A1 + Management + Moisture, data = dune.env)
+           Df ChiSquare      F Pr(&gt;F)   
+A1          1   0.22476 2.7632  0.008 **
+Management  3   0.55502 2.2744  0.003 **
+Moisture    3   0.35939 1.4728  0.064 . 
+Residual   12   0.97610                 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+]
+
+- **Sequential:** Explains residuals of the previous terms
+
+- Order-dependent
+
+- Decomposes inertia: sum equals to total inertia
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/anovaseq-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Terms: Marginal Tests
+
+.pull-left[
+.small[
+
+```
+Permutation test for cca under reduced model
+Marginal effects of terms
+Permutation: free
+Number of permutations: 999
+
+Model: cca(formula = dune ~ A1 + Management + Moisture, data = dune.env)
+           Df ChiSquare      F Pr(&gt;F)  
+A1          1   0.13679 1.6817  0.083 .
+Management  3   0.39543 1.6205  0.020 *
+Moisture    3   0.35939 1.4728  0.064 .
+Residual   12   0.97610                
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+]
+
+- **Marginal:** Explains residuals after all other terms
+
+- Order-independent
+
+- Shows only the unique component of inertia that cannot be explained
+  by any other term
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/anovamar-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Restricted Permutations
+
+.pull-left[
+
+- Restricted permutation allows analysis of data with dependencies
+
+- Clusters of SUs that will not move or that can be permuted with
+  other clusters
+
+- SUs within clusters can be permuted *freely*, or as one-dimensional
+  *series* or as spatial *grids*, and these can be *mirrorred*
+
+- Permutations can be *constant* or *vary* in clusters
+
+- For instance, Barro Colorado Island Rainforest plots are in
+  contiguous grid, and free permutation breaks spatial structure
+
+- BCI has `\(50! = 3.041\times 10^{64}\)` free permutations, but
+  only `\(50 \times 4 = 200\)` permutations with mirrorred grid
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/respermu-1.svg" style="display: block; margin: auto;" /&gt;
+Barro Colorado Island Rainforests (BCI): Free &amp; Grid Permutations &amp;mdash; colour: Habitat type
+]
+
+---
+# Free and Spatial Error
+
+.pull-left[
+.small[
+&lt;img src="ordination101_files/figure-html/bcifree-1.svg" style="display: block; margin: auto;" /&gt;
+
+```
+Permutation test for cca under reduced model
+Permutation: free
+Number of permutations: 999
+
+Model: cca(formula = BCI ~ Habitat, data = BCI.env)
+         Df ChiSquare    F Pr(&gt;F)    
+Model     4   0.31139 3.43  0.001 ***
+Residual 45   1.02134                
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+]
+]
+
+.pull-right[
+.small[
+&lt;img src="ordination101_files/figure-html/bcigrid-1.svg" style="display: block; margin: auto;" /&gt;
+
+```
+Permutation test for cca under reduced model
+Permutation: grid mirrored 5 rows 10 columns
+Number of permutations: 199
+
+Model: cca(formula = BCI ~ Habitat, data = BCI.env)
+         Df ChiSquare    F Pr(&gt;F)   
+Model     4   0.31139 3.43  0.005 **
+Residual 45   1.02134               
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+]
+]
+
+---
+class: inverse center middle
+
+## Model Choice
+
+Constrained ordination is application of regression analysis on
+multivariate responses. If we have a designed experiment or strong
+theory, we can select the constraints in advance and test their
+significances. In exploratory analysis we must choose the variables
+among candidates. This means trouble.
+
+---
+# What Variables to Keep?
+
+- If we have a designed experiment, we keep and analyse all design
+  variables &amp;mdash; even if these are insignificant
+
+- If we have a strong prior theory, we keep and analyse all variables
+  of interest &amp;mdash; even those that prove to be insignificant
+
+- In exploratory analysis we choose the variables among candidates,
+  and normally want all kept variables be significant
+
+- The problem is that there may be several different sets of
+  significant variables
+
+- In particular when explanatory variables are correlated, there may
+  be several alternative good choices, and picking one of correlated
+  variables can have cascading effects on later choices
+
+- Automatic procedures of model choice are popular but dangerous,
+  unstable and biased
+
+- If variables are picked by their goodness, the statistical tests on
+  their goodness are biased
+
+- All these problems are similar as in ordinary regression
+
+---
+# Automatic Model Choice
+
+&lt;img src="ordination101_files/figure-html/ordistep-1.svg" style="display: block; margin: auto;" /&gt;
+---
+# Both Models Are Good
+
+.pull-left[
+.small[
+
+```
+Permutation test for cca under reduced model
+Terms added sequentially (first to last)
+Permutation: free
+Number of permutations: 999
+
+Model: cca(formula = varespec ~ P + Al + K, data = varechem)
+         Df ChiSquare      F Pr(&gt;F)    
+P         1   0.18880 2.6239  0.007 ** 
+Al        1   0.29928 4.1594  0.001 ***
+K         1   0.15605 2.1688  0.016 *  
+Residual 20   1.43906                  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+- **Forward selection:** variables are added as long as they improve
+    the model after all previously selected variables
+
+- Similar to *sequential* tests for terms
+
+- `Al` was the first choice: it correlates with many other
+  variables and this makes it a good surrogate for them all
+
+]]
+
+.pull-right[
+.small[
+
+```
+Permutation test for cca under reduced model
+Marginal effects of terms
+Permutation: free
+Number of permutations: 999
+
+Model: cca(formula = varespec ~ P + K + S + Baresoil, data = varechem)
+         Df ChiSquare      F Pr(&gt;F)   
+P         1   0.17392 2.3923  0.011 * 
+K         1   0.15270 2.1005  0.021 * 
+S         1   0.17436 2.3983  0.005 **
+Baresoil  1   0.17484 2.4050  0.007 **
+Residual 19   1.38130                 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+- **Backward elimination:** variables are removed if they do not have
+    unique importance
+
+- Similar to *marginal* tests for terms
+
+- `Al` was one of the first dropped: it correlates with many other
+  variables and has no unique contribution
+
+]]
+
+---
+# How Many Constraints?
+
+- Constrained ordination is based on the linear combinations of constraints
+
+- If there are many constraints, almost anything can be made of their
+  linear combinations
+
+- **Many** constraints mean **no** constraints
+
+- With many constraints it can be almost the same to use unconstrained
+  ordination plus vector fitting &amp;mdash; and actually this can be
+  wiser
+
+- Constrained ordination can cure curves of PCA, but then we need a
+  low number of constraints
+
+- Automatic choice of variables tries to liberate ordination from
+  constraints
+
+  - The best possible constraint is an unconstrained ordination axis
+    (PC, CA), and with automatical model choice we try to get as close
+    to that as possible
+
+- The best use of constrained methods is for designed patterns, and
+  the next good is strict constraint with interesting variables
+
+---
+# Ordination Wants to be Free!
+
+&lt;img src="ordination101_files/figure-html/liberame-1.svg" style="display: block; margin: auto;" /&gt;
+Bryce Canyon, Bray-Curtis dissimilarity
+
+---
+# Too Many Constraints?
+
+- Constrained ordination **is** regression, and we have all the same
+  problems as in univariate regression &amp;mdash; but multiplied
+
+- Too many regressors is overfitting: Absolute limit is that the
+  number of constraints equals the number of observations, and we have
+  a complete fit with no residual error
+
+- In ordination we focus on first axes, and there the overfitting can
+  appear much earlier &amp;mdash; even with two constraints
+
+- You may be worried when
+
+  - Residual variation is low
+
+  - First constrained eigenvalues are nearly as high as first
+    eigenvalues of unconstrained ordination
+
+  - First unconstrained residual eigenvalues are low compared to first
+    constrained ones
+
+  - You see a curve
+
+- It may be better to use unconstrained analysis plus fitted vectors
+  and factors than many useless constraints
+
+
+---
+
+class: inverse center middle
+
+## Partial Ordination
+
+We can use constraints in two stages: We first remove the effects of
+some some background variables and then analyse the residuals with
+constraints. We can also decompose total variation into several
+sources of explanatory variables.
+
+---
+# Partial Ordination
+
+- Constrained ordination actually has two components: Ordination of
+  fitted values and ordination of residuals
+
+- If we want to remove the effect of some variables, we can fit them
+  first and subject residuals to constrained ordination: This gives us
+  **partial ordination**
+
+- **Conditions:** The terms partialled out
+
+- The conditions can be background variables or confounding factors
+  that we want to remove before analysing the effects of variables of
+  interest
+
+  - Partial out natural environmental differences of plots or blocks
+    in designed experiments
+
+  - Partial out initial conditions in designed experiments
+
+  - Partial out *Plot* in split-*plot* designs
+
+  - Remove uninteresting environmental variation before focussing on
+    the interesting variables
+
+---
+
+# Example: Effects of Insecticide
+
+
+
+- Pyrifos insecticide was administered at 4 different levels (plus
+  control) in 12 Dutch ditches and the development of zooplankton was
+  monitored for 2 times before and 9 times after the treatment (at -4
+  to 24 weeks)
+
+- Zooplankton has a natural annual succession, but we want to partial
+  out that effect to see the effect of insecticide
+
+- The interesting variable is the insecticide `dose*time`
+  interaction, but the main effect of `time` will be aliased out from
+  the model because it was already used as a condition and partialled
+  out, leaving us `dose + dose:time` 
+
+- In mixed effect models we would use ditch as a random effect, but it
+  cannot be used as a condition, because the insecticide treatment is
+  constant in each ditch, but *permuting* ditches takes into account
+  the random effect in the error term
+
+- Observations are repeated over weeks, and therefore we use series
+  permutation within each ditch
+
+- Time goes only forward and simultaneously in all ditches, and
+  therefore we use no mirrorring and have the same permutation within
+  each ditch
+
+- These restrictions reduce the number of all possible permutations
+  from `\(1.118\times 10^{224}\)` free permutations to
+  `\(5.269\times 10^{9}\)` which is still a lot
+
+---
+# Example: Effects of Insecticide
+
+.pull-left[
+
+- The annual succession was *partialled out*
+
+- The *random effect* of ditch (block) was handled with permutation of
+  ditches
+
+- The *temporal dependence* was handled with restricting permutation to
+  constant series within ditch
+
+.small[
+
+```
+Permutation test for rda under reduced model
+Plots: ditch, plot permutation: free
+Permutation: series constant permutation within each Plot
+Number of permutations: 999
+
+Model: rda(formula = pyrifos ~ dose * week + Condition(week))
+         Df Variance     F Pr(&gt;F)  
+Model    44   96.684 1.312  0.024 *
+Residual 77  128.959               
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+]]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/pyripca-1.svg" style="display: block; margin: auto;" /&gt;
+Unconstrained PCA for the Pyrifos experiment
+]
+
+---
+# Partial Model: Only for Numbers?
+
+.pull-left[
+
+- Complicated partial models are often useless as graphics
+
+- Their main use may be in statistical testing of multivariate
+  observations with non-parmetric permutation
+
+- In the Pyrifos example, the partial ordination shows that doses of
+  insecticide treatment are located in different parts of the
+  ordination, but the temporal cycles are not different
+
+  - The model shows the `dose:time` interaction instead of `time`
+
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/pyriprda-1.svg" style="display: block; margin: auto;" /&gt;
+Partial RDA for the Pyrifos experiment
+]
+
+---
+
+# Partitioning of Variation
+
+- Partial ordination decomposes total variation `\(\Lambda\)` into
+  variation partialled out `\(\Lambda_p\)`, residual explained variation
+  `\(\Lambda_k\)` and into residuals `\(\Lambda_r\)`, or total inertia
+  `\(\Lambda = \Lambda_p + \Lambda_k + \Lambda_r\)`
+
+- Sometimes we are interested in the relative magnitudes of several
+  sources of variation
+
+- That variation can be variance (RDA), `\(\chi^2\)` (CCA) or derived from
+  squared dissimilarties (dbRDA)
+
+- The proportional variation of a component is
+  `\(R^2 = \Lambda_k/\Lambda\)` &amp;mdash; which really is the squared correlation
+  coefficient
+
+- `\(R^2\)` is biased: even random data have `\(R^2&gt;0\)`, and when you add
+  terms, `\(R^2\)` can only improve, and therefore we use adjusted `\(R^2\)`
+  that has expected value `\(E(R^2) = 0\)` in random data
+
+- We can have several components of variation
+
+- These sources are decomposed into their unique effect and effects
+  shared with other sources of variation
+
+---
+
+# Partitioning of Variation: Pyrifos
+
+.pull-left[
+.small[
+
+```
+
+Partition of variance in RDA 
+
+Call: varpart(Y = pyrifos, X = ~week, ~dose)
+
+Explanatory tables:
+X1:  ~week
+X2:  ~dose 
+
+No. of explanatory tables: 2 
+Total variation (SS): 37858 
+            Variance: 288.99 
+No. of observations: 132 
+
+Partition table:
+                     Df R.squared Adj.R.squared Testable
+[a+b] = X1           10   0.21921       0.15468     TRUE
+[b+c] = X2            4   0.10621       0.07806     TRUE
+[a+b+c] = X1+X2      14   0.32542       0.24470     TRUE
+Individual fractions                                    
+[a] = X1|X2          10                 0.16664     TRUE
+[b]                   0                -0.01196    FALSE
+[c] = X2|X1           4                 0.09002     TRUE
+[d] = Residuals                         0.75530    FALSE
+---
+Use function 'rda' to test significance of fractions of interest
+```
+]
+]
+
+.pull-right[
+&lt;img src="ordination101_files/figure-html/varpartplot-1.svg" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+class: inverse center bottom
+
+# The End
+--
+
+## Thank You
+
+---
+.small[
+
+```
+R version 4.0.2 (2020-06-22)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 18362)
+
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=English_United States.1252  LC_CTYPE=English_United States.1252    LC_MONETARY=English_United States.1252
+[4] LC_NUMERIC=C                           LC_TIME=English_United States.1252    
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] viridis_0.5.1     viridisLite_0.3.0 knitr_1.30        analogue_0.17-5   labdsv_2.0-1      mgcv_1.8-31       nlme_3.1-148     
+ [8] vegan3d_1.1-2     natto_0.2         vegan_2.5-6       lattice_0.20-41   permute_0.9-5    
+
+loaded via a namespace (and not attached):
+ [1] rgl_0.100.54            Rcpp_1.0.5              digest_0.6.25           mime_0.9                R6_2.4.1               
+ [6] princurve_2.1.5         evaluate_0.14           xaringan_0.17           ggplot2_3.3.2           pillar_1.4.6           
+[11] rlang_0.4.7             miniUI_0.1.1.1          Matrix_1.2-18           rmarkdown_2.3           splines_4.0.2          
+[16] webshot_0.5.2           Rtsne_0.15              stringr_1.4.0           htmlwidgets_1.5.1       munsell_0.5.0          
+[21] shiny_1.5.0             compiler_4.0.2          httpuv_1.5.4            xfun_0.17               pkgconfig_2.0.3        
+[26] htmltools_0.5.0         tidyselect_1.1.0        tibble_3.0.3            gridExtra_2.3           codetools_0.2-16       
+[31] brglm_0.7.1             crayon_1.3.4            dplyr_1.0.2             later_1.1.0.1           MASS_7.3-51.6          
+[36] grid_4.0.2              jsonlite_1.7.1          xtable_1.8-4            gtable_0.3.0            lifecycle_0.2.0        
+[41] magrittr_1.5            scales_1.1.1            stringi_1.5.3           promises_1.1.1          scatterplot3d_0.3-41   
+[46] ellipsis_0.3.1          vctrs_0.3.4             generics_0.0.2          tools_4.0.2             manipulateWidget_0.10.1
+[51] glue_1.4.2              purrr_0.3.4             crosstalk_1.1.0.1       profileModel_0.6.0      parallel_4.0.2         
+[56] fastmap_1.0.1           yaml_2.2.1              colorspace_1.4-1        cluster_2.1.0          
+```
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
